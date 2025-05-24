@@ -7,6 +7,7 @@ WORKDIR /app
 # Copiar package.json e instalar dependências
 COPY package*.json ./
 RUN npm install
+RUN npm install -g pm2
 
 # Copiar o restante do código
 COPY . .
@@ -15,4 +16,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando para rodar a aplicação
-CMD ["npm", "run", "dev"]
+CMD ["pm2-runtime", "index.js"]
