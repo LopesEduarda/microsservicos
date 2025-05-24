@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  users-service:
+    build: ./users-service
+    ports:
+      - "3000:3000"
+    networks:
+      - microsservices-network
+
+  orders-service:
+    build: ./orders-service
+    ports:
+      - "3002:3002"
+    networks:
+      - microsservices-network
+    depends_on:
+      - users-service
+
+networks:
+  microsservices-network:
+    driver: bridge
