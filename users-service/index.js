@@ -1,40 +1,24 @@
-import express from 'express';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors');
+const { User } = require('./models');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Dados simulados (banco de dados)
-const users = [
-    { id: 1, name: 'Alice', email: '' }
-];
-
-// Rotas
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+    const users = await User.findAll();
     res.json(users);
 });
 
-app.post('/users', (req, res) => {
+app.post('/register', async (req, res) => {
     const { name, email } = req.body;
-    if (!name || !email) {
-        return res.status(400).json({ error: 'Name and email are required' });
-    }
-
-    const newUser = {
-        id: users.length + 1,
-        name,
-        email
-    };
-
-    users.push(newUser);
-    res.status(201).json(newUser);
+    const user = await User.create({ name, email });
+    res.json({ message: 'Usuário cadastrado com sucesso!', user });
 });
 
-// Iniciar o servidor
 app.listen(PORT, () => {
-    console.log(`Users service is running on http://localhost:${PORT}`);
+    console.log(`Users Service rodando na porta ${PORT}`);
 });

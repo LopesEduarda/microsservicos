@@ -1,12 +1,42 @@
 version: '3.8'
 
 services:
+  users-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: duda
+      POSTGRES_PASSWORD: marylemos10
+      POSTGRES_DB: users_service_db
+    ports:
+      - "5433:5432"
+    networks:
+      - microsservices-network
+    volumes:
+      - users-data:/var/lib/postgresql/data
+
   users-service:
     build: ./users-service
     ports:
       - "3000:3000"
     networks:
       - microsservices-network
+    depends_on:
+      - users-db
+
+  orders-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: duda
+      POSTGRES_PASSWORD: marylemos10
+      POSTGRES_DB: orders_service_db
+    ports:
+      - "5434:5432"
+    networks:
+      - microsservices-network
+    volumes:
+      - orders-data:/var/lib/postgresql/data
 
   orders-service:
     build: ./orders-service
@@ -15,8 +45,13 @@ services:
     networks:
       - microsservices-network
     depends_on:
+      - orders-db
       - users-service
 
 networks:
   microsservices-network:
     driver: bridge
+
+volumes:
+  users-data:
+  orders-data:
