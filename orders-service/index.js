@@ -13,7 +13,7 @@ async function checkUserExists(userId) {
     try {
         const response = await axios.get(`http://users-service:3000/users`);
         const users = response.data;
-        console.log('Users:', users);
+        console.log('Users:::', users);
         const user = users.find(u => u.id === userId);
         return user;
     } catch (error) {
