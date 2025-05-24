@@ -4,5 +4,5 @@ orders-service/config/config.json
 users-service/config/config.json
 .env
 docker-compose.yml
-microsservicos-key
-microsservicos-key.pub
+microsservicos-key2
+microsservicos-key-2.pub
