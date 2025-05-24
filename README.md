@@ -24,7 +24,6 @@ Ambos os serviços são desenvolvidos em **Node.js**, utilizando **Express**, **
 
 ## 🗺️ Arquitetura
 
-\`\`\`plaintext
 users-service
  ├── Banco PostgreSQL próprio (porta 5433)
  ├── API REST na porta 3000
@@ -34,7 +33,6 @@ orders-service
  ├── Banco PostgreSQL próprio (porta 5434)
  ├── API REST na porta 3002
  └── Gerenciado com PM2
-\`\`\`
 
 ---
 
