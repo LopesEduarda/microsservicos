@@ -41,12 +41,15 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
+        working-directory: ./users-service
         run: npm install
 
       - name: Run migrations
+        working-directory: ./users-service
         run: npx sequelize-cli db:migrate
 
       - name: Run tests
+        working-directory: ./users-service
         run: npm run test
 
 
@@ -81,6 +84,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/microsservicos
             git pull
-            docker-compose down
-            docker-compose up --build -d
+            docker compose down
+            docker compose up --build -d
           EOF
