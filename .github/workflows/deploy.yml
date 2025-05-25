@@ -9,19 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      POSTGRES_USER_USERS: ${{ secrets.POSTGRES_USER_USERS }}
-      POSTGRES_PASSWORD_USERS: ${{ secrets.POSTGRES_PASSWORD_USERS }}
-      POSTGRES_DB_USERS: ${{ secrets.POSTGRES_DB_USERS }}
-      POSTGRES_PORT_USERS: ${{ secrets.POSTGRES_PORT_USERS }}
-      USERS_SERVICE_PORT: ${{ secrets.USERS_SERVICE_PORT }}
-
-      POSTGRES_USER_ORDERS: ${{ secrets.POSTGRES_USER_ORDERS }}
-      POSTGRES_PASSWORD_ORDERS: ${{ secrets.POSTGRES_PASSWORD_ORDERS }}
-      POSTGRES_DB_ORDERS: ${{ secrets.POSTGRES_DB_ORDERS }}
-      POSTGRES_PORT_ORDERS: ${{ secrets.POSTGRES_PORT_ORDERS }}
-      ORDERS_SERVICE_PORT: ${{ secrets.ORDERS_SERVICE_PORT }}
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -35,6 +22,25 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd ~/microsservicos
+
+            echo "Gerando arquivo .env na EC2..."
+
+            cat > .env << EOT
+POSTGRES_USER_USERS=${{ secrets.POSTGRES_USER_USERS }}
+POSTGRES_PASSWORD_USERS=${{ secrets.POSTGRES_PASSWORD_USERS }}
+POSTGRES_DB_USERS=${{ secrets.POSTGRES_DB_USERS }}
+POSTGRES_PORT_USERS=${{ secrets.POSTGRES_PORT_USERS }}
+USERS_SERVICE_PORT=${{ secrets.USERS_SERVICE_PORT }}
+
+POSTGRES_USER_ORDERS=${{ secrets.POSTGRES_USER_ORDERS }}
+POSTGRES_PASSWORD_ORDERS=${{ secrets.POSTGRES_PASSWORD_ORDERS }}
+POSTGRES_DB_ORDERS=${{ secrets.POSTGRES_DB_ORDERS }}
+POSTGRES_PORT_ORDERS=${{ secrets.POSTGRES_PORT_ORDERS }}
+ORDERS_SERVICE_PORT=${{ secrets.ORDERS_SERVICE_PORT }}
+EOT
+
+            echo "Arquivo .env gerado com sucesso!"
+
             git pull
             docker-compose down
             docker-compose up --build -d
