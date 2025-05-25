@@ -9,20 +9,33 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      POSTGRES_USER_USERS: ${{ secrets.POSTGRES_USER_USERS }}
+      POSTGRES_PASSWORD_USERS: ${{ secrets.POSTGRES_PASSWORD_USERS }}
+      POSTGRES_DB_USERS: ${{ secrets.POSTGRES_DB_USERS }}
+      POSTGRES_PORT_USERS: ${{ secrets.POSTGRES_PORT_USERS }}
+      USERS_SERVICE_PORT: ${{ secrets.USERS_SERVICE_PORT }}
+
+      POSTGRES_USER_ORDERS: ${{ secrets.POSTGRES_USER_ORDERS }}
+      POSTGRES_PASSWORD_ORDERS: ${{ secrets.POSTGRES_PASSWORD_ORDERS }}
+      POSTGRES_DB_ORDERS: ${{ secrets.POSTGRES_DB_ORDERS }}
+      POSTGRES_PORT_ORDERS: ${{ secrets.POSTGRES_PORT_ORDERS }}
+      ORDERS_SERVICE_PORT: ${{ secrets.ORDERS_SERVICE_PORT }}
+
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v3
+      - name: Checkout do código
+        uses: actions/checkout@v3
 
-    - name: Configurar SSH
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-    - name: Deploy na EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          cd ~/microsservicos
-          git pull
-          docker-compose down
-          docker-compose up --build -d
-        EOF
+      - name: Deploy na EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ~/microsservicos
+            git pull
+            docker-compose down
+            docker-compose up --build -d
+          EOF
